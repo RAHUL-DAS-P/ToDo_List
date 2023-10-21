@@ -13,19 +13,19 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-var items = [];
+
 
 app.get("/", async (req, res) => {
   const allTodos = await pool.query("select * from todo");
-  var listed = [];
+  var items = [];
   for (let i = 0; i < allTodos.rowCount; i++) {
     items[i] = allTodos.rows[i].description;
   }
+  console.log(items);
   res.render("list", {listTitle: "Today", newListItems: items});
 });
 
 app.post("/", async function(req, res){
-
   const item = req.body.newItem;
   if(item == "" ) {
     res.redirect("/");
@@ -42,8 +42,9 @@ app.post("/delete", async (req, res) => {
   res.redirect("/");
 });
 
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
+app.get("/:custom", async (req, res) => {
+  const custom = req.params.custom;
+  console.log(custom);
 });
 
 app.get("/about", function(req, res){
