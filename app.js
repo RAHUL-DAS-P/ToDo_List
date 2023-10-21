@@ -21,7 +21,6 @@ app.get("/", async (req, res) => {
   for (let i = 0; i < allTodos.rowCount; i++) {
     items[i] = allTodos.rows[i].description;
   }
-  console.log(items);
   res.render("list", {listTitle: "Today", newListItems: items});
 });
 
@@ -44,7 +43,6 @@ app.post("/delete", async (req, res) => {
 
 app.get("/:custom", async (req, res) => {
   const custom = req.params.custom;
-  console.log(custom);
 });
 
 app.get("/about", function(req, res){
