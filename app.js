@@ -3,6 +3,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const date = require(__dirname + "/date.js");
+const pg = require("pg");
+const pool = require("./db");
 
 const app = express();
 
@@ -11,15 +13,15 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-const items = ["Buy Food", "Cook Food", "Eat Food"];
-const workItems = [];
+var items = [];
 
-app.get("/", function(req, res) {
-
-const day = date.getDate();
-
-  res.render("list", {listTitle: day, newListItems: items});
-
+app.get("/", async (req, res) => {
+  const allTodos = await pool.query("select * from todo");
+  var listed = [];
+  for (let i = 0; i < allTodos.rowCount; i++) {
+    items[i] = allTodos.rows[i].description;
+  }
+  res.render("list", {listTitle: "Today", newListItems: items});
 });
 
 app.post("/", function(req, res){
