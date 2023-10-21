@@ -24,17 +24,16 @@ app.get("/", async (req, res) => {
   res.render("list", {listTitle: "Today", newListItems: items});
 });
 
-app.post("/", function(req, res){
+app.post("/", async function(req, res){
 
   const item = req.body.newItem;
-
-  if (req.body.list === "Work") {
-    workItems.push(item);
-    res.redirect("/work");
-  } else {
-    items.push(item);
+  if(item == "" ) {
     res.redirect("/");
+    return;
   }
+  const addNewRow = await pool.query("insert into todo(description) values($1)", [item]) ;
+  res.redirect("/");
+  
 });
 
 app.get("/work", function(req,res){
