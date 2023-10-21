@@ -36,6 +36,12 @@ app.post("/", async function(req, res){
   
 });
 
+app.post("/delete", async (req, res) => {
+  const description = req.body.checkbox;
+  const deleteRow = await pool.query("delete from todo where description=$1", [description]);
+  res.redirect("/");
+});
+
 app.get("/work", function(req,res){
   res.render("list", {listTitle: "Work List", newListItems: workItems});
 });
